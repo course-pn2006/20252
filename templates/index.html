@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Eco Pack Dashboard </title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+  <h1>EcoPack Dashboard </h1>
+  <div class="charts">
+    <div class="chart-container">
+      <h3>Temperature (°C)</h3>
+      <canvas id="chartTemp"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>Humidity (%)</h3>
+      <canvas id="chartHum"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>CPU (°C)</h3>
+      <canvas id="chartM"></canvas>
+    </div>
+    <footer>
+      &copy; 2025. Copyright.EcoPack
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}">
+  </script>
+</body>
+
+</html>

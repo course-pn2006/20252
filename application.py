@@ -14,7 +14,7 @@ DB_CONFIG = {
     "database": "iot"
 }
 
-def save_to_db(data):
+def save_to_db(record):
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
         cursor = connection.cursor()
@@ -22,7 +22,7 @@ def save_to_db(data):
         INSERT INTO sensor_data (temperature, humidity, measurement, sensor_id)
         VALUES (%s, %s, %s, %s)
         """
-        cursor.execute(query, (data["t"], data["h"], data["m"], data["i"]))
+        cursor.execute(query, (record["t"], record["h"], record["m"], record["i"]))        
         connection.commit()
         cursor.close()
         connection.close()
@@ -53,6 +53,7 @@ def receive_data():
             "ts": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         data_points.append(record)
+        save_to_db(record)
 
         print(f"[DATA] T:{record['t']} H:{record['h']} M:{record['m']} I:{record['i']}")
 
@@ -73,11 +74,11 @@ def query_data():
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT id, temperature, humidity, measurement, sensor_id, created_at FROM sensor_data ORDER BY created_at DESC")
+        cursor.execute("SELECT id, temperature, humidity, measurement, sensor_id, timestamp FROM sensor_data ORDER BY timestamp DESC")
         rows = cursor.fetchall()
         cursor.close()
         connection.close()
-        return render_template("query_data.html", rows=rows)
+        return render_template("data.html", rows=rows)
     except Exception as e:
         print("[ERROR] Failed to query data:", e)
         return f"<h3>Error al consultar datos: {e}</h3>", 500
